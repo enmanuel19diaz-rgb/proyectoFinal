@@ -1,0 +1,18 @@
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+out/
+gen/
+/workspace.xml
+/shelf/
+/dataSources/
+/dataSources.local.xml
+/httpRequests/
+
+# --- Archivos de Sistema ---
+[Dd]s.[Ss]tore
+Thumbs.db
+nul
+
+# --- Java ---
+*.class

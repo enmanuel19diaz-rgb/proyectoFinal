@@ -1,0 +1,109 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectId\" id=\"3BYhk2DOYxCq1ycNjaYdmNYnbyR\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4fc36a35152943879539f347c52848ac2bb1e5f6)
++++ b/.idea/workspace.xml	(date 1774679639524)
+@@ -1,4 +1,97 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
++  <component name="ChangeListManager">
++    <list default="true" id="acccea87-f044-4840-93e6-5700750db4b3" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/../src/main/resources/META-INF/maven/archetype.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/../src/main/resources/archetype-resources/pom.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/../src/main/resources/archetype-resources/src/main/java/App.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/../src/main/resources/archetype-resources/src/test/java/AppTest.java" beforeDir="false" />
++    </list>
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="CopilotPersistence">
++    <persistenceIdMap>
++      <entry key="_C:/Users/jensi/IdeaProjects/proyectoFinal/colmado-system/colmado-system" value="3BYhk2DOYxCq1ycNjaYdmNYnbyR" />
++    </persistenceIdMap>
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Class" />
++      </list>
++    </option>
++  </component>
++  <component name="Git.Settings">
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
++  </component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;J-bot-oss-code&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/enmanuel19diaz-rgb/proyectoFinal.git&quot;,
++    &quot;accountId&quot;: &quot;f029692d-b858-4cab-9883-c318dda1a0fd&quot;
++  }
++}</component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 4
++}</component>
+   <component name="ProjectId" id="3BYhk2DOYxCq1ycNjaYdmNYnbyR" />
++  <component name="ProjectLevelVcsManager">
++    <ConfirmationsSetting value="2" id="Add" />
++  </component>
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
++    "ModuleVcsDetector.initialDetectionPerformed": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "git-widget-placeholder": "develop",
++    "kotlin-language-version-configured": "true"
++  }
++}]]></component>
++  <component name="SharedIndexes">
++    <attachedChunks>
++      <set>
++        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
++      </set>
++    </attachedChunks>
++  </component>
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="acccea87-f044-4840-93e6-5700750db4b3" name="Changes" comment="" />
++      <created>1774672050791</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1774672050791</updated>
++    </task>
++    <servers />
++  </component>
++  <component name="github-copilot-workspace">
++    <instructionFileLocations>
++      <option value=".github/instructions" />
++    </instructionFileLocations>
++    <promptFileLocations>
++      <option value=".github/prompts" />
++    </promptFileLocations>
++  </component>
+ </project>
+\ No newline at end of file

@@ -34,7 +34,7 @@ build/
 
 # Maven — archivos compilados target/ *.class # Credenciales — NUNCA subir
 src/main/resources/config.properties
-# IDEs .idea/ *.iml .vscode/ nbproject/
+ #IDEs .idea/ *.iml .vscode/ nbproject/
 
 ### VS Code ###
 .vscode/

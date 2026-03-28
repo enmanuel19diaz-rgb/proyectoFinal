@@ -18,7 +18,7 @@ public class ConexionDB {
             System.out.println("Conexion exitosa");
 
         }catch(Exception e){
-            System.out.println(" ha habido un error en la conexion a la base de datos " + e.getMessage());
+            System.out.println(" Ha habido un error en la conexion a la base de datos " + e.getMessage());
 
         }
     }

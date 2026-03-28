@@ -41,3 +41,6 @@ src/main/resources/config.properties
 
 ### Mac OS ###
 .DS_Store
+
+### Config properties ###
+config.properties

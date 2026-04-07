@@ -54,6 +54,5 @@ public class VentaDAO {
                 con.setAutoCommit(true);
             }catch(Exception ex){}
         }
-
     }
 }

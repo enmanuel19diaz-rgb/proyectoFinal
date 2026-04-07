@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="e64d0d0d-337c-471f-bbf7-bd13f5eef6f3" name="Changes" comment="" />
+=======
+    <list default="true" id="e64d0d0d-337c-471f-bbf7-bd13f5eef6f3" name="Changes" comment="Merge branch 'modulo-ventas' into develop&#10;&#10;# Conflicts:&#10;#&#9;colmado-system/colmado-system/.idea/workspace.xml" />
+>>>>>>> develop
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,7 +43,11 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/enmanuel19diaz-rgb/proyectoFinal.git&quot;,
+<<<<<<< HEAD
     &quot;accountId&quot;: &quot;f029692d-b858-4cab-9883-c318dda1a0fd&quot;
+=======
+    &quot;accountId&quot;: &quot;e36cdcb0-4dc7-4e94-8697-79cdb36a96a8&quot;
+>>>>>>> develop
   }
 }</component>
   <component name="MavenRunner">
@@ -56,6 +64,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.App.executor&quot;: &quot;Run&quot;,
@@ -68,12 +77,27 @@
     &quot;git-widget-placeholder&quot;: &quot;features/base-login&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/enman/Desktop/proyectoFinal/colmado-system/colmado-system&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.App.executor": "Run",
+    "Application.testConexion.executor": "Run",
+    "Maven.colmado-system [clean].executor": "Run",
+    "Maven.colmado-system [install].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "modulo-ventas",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/enman/Desktop/proyectoFinal/colmado-system/colmado-system"
+>>>>>>> develop
   }
 }</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
       </set>
     </attachedChunks>
   </component>
@@ -86,6 +110,17 @@
       <updated>1774716784355</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

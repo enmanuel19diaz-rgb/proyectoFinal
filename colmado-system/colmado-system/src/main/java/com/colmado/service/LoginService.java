@@ -4,14 +4,14 @@ import com.colmado.dao.UsuarioDAO;
 import com.colmado.modelo.Usuario;
 
 public class LoginService {
-    private UsuarioDAO usuarioDAO;
+    private static UsuarioDAO usuarioDAO;
 
     public LoginService(){
         this.usuarioDAO = new UsuarioDAO();
 
     }
 
-    public Usuario autenticar(String user, String pass)throws Exception{
+    public static Usuario autenticar(String user, String pass)throws Exception{
     // validamos que no este vacio al iniciar seccion
         if(user == null || user.trim().isEmpty()){
             throw new Exception("El nombre de usuario es obligatorio");

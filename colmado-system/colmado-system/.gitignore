@@ -44,3 +44,6 @@ src/main/resources/config.properties
 
 ### Config properties ###
 config.properties
+
+### workpace ###
+.idea/workspace.xml

@@ -47,3 +47,8 @@ config.properties
 
 ### workpace ###
 .idea/workspace.xml
+
+
+.idea/
+target/
+*.iml

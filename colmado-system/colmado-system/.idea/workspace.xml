@@ -4,100 +4,46 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e64d0d0d-337c-471f-bbf7-bd13f5eef6f3" name="Changes" comment="Merge branch 'modulo-ventas' into develop&#10;&#10;# Conflicts:&#10;#&#9;colmado-system/colmado-system/.idea/workspace.xml" />
+    <list default="true" id="9cd0d306-63e3-4d6e-9095-d7da3b42830f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colmado/service/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colmado/service/LoginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colmado/vista/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colmado/vista/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/colmado/vista/panel/panelLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/colmado/vista/panel/panelLogin.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CopilotPersistence">
-    <persistenceIdMap>
-      <entry key="_C:/Users/jensi/IdeaProjects/proyectoFinal/colmado-system/colmado-system" value="3BYhk2DOYxCq1ycNjaYdmNYnbyR" />
-    </persistenceIdMap>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$/../.." value="develop" />
-      </map>
-    </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
-  </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;enmanuel19diaz-rgb&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/enmanuel19diaz-rgb/proyectoFinal.git&quot;,
-    &quot;accountId&quot;: &quot;e36cdcb0-4dc7-4e94-8697-79cdb36a96a8&quot;
-  }
-}</component>
-  <component name="MavenRunner">
-    <option name="skipTests" value="true" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 3
-}</component>
-  <component name="ProjectId" id="3BYhk2DOYxCq1ycNjaYdmNYnbyR" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.App.executor": "Run",
-    "Application.testConexion.executor": "Run",
-    "Maven.colmado-system [clean].executor": "Run",
-    "Maven.colmado-system [install].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/enman/Desktop/proyectoFinal/colmado-system/colmado-system"
-  }
-}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jensi\IdeaProjects\proyectoFinal\colmado-system\colmado-system\src\main\resources" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e64d0d0d-337c-471f-bbf7-bd13f5eef6f3" name="Changes" comment="" />
-      <created>1774716784355</created>
+      <changelist id="9cd0d306-63e3-4d6e-9095-d7da3b42830f" name="Changes" comment="" />
+      <created>1775665071760</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1774716784355</updated>
+      <updated>1775665071760</updated>
     </task>
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

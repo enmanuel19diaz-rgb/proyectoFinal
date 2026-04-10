@@ -3,6 +3,8 @@ package com.colmado.vista;
 import com.colmado.util.ConexionDB;
 import com.colmado.modelo.Usuario;
 import com.colmado.vista.panel.panelLogin;
+import com.colmado.vista.panel.panelFactura;
+import com.colmado.vista.panel.panelVentas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +45,11 @@ public class MainFrame extends JFrame{
         // Placeholders — se reemplazan cuando los compañeros entreguen sus paneles
         panelContenido.add(crearPlaceholder("📦", "Módulo de Productos",  "Persona 2 — en desarrollo"), "productos");
         panelContenido.add(crearPlaceholder("🏪", "Módulo de Inventario", "Persona 2 — en desarrollo"), "inventario");
-        panelContenido.add(crearPlaceholder("💰", "Módulo de Ventas",     "Persona 3 — en desarrollo"), "ventas");
-        panelContenido.add(crearPlaceholder("🧾", "Módulo de Factura",    "Persona 3 — en desarrollo"), "factura");
+        panelFactura vistaFactura = new panelFactura();
+        panelVentas vistaVentas = new panelVentas(usuarioActual, vistaFactura, cardLayout, panelContenido);
+        panelContenido.add(vistaVentas, "ventas");
+
+        panelContenido.add(vistaFactura, "factura");
         panelContenido.add(crearPlaceholder("👥", "Módulo de Clientes",   "Persona 4 — en desarrollo"), "clientes");
         panelContenido.add(crearPlaceholder("📊", "Módulo de Reportes",   "Persona 4 — en desarrollo"), "reportes");
 

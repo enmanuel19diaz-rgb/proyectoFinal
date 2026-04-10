@@ -46,5 +46,14 @@ src/main/resources/config.properties
 config.properties
 
 ### workpace ###
+<<<<<<< HEAD
 .idea/
 workspace.xml
+=======
+.idea/workspace.xml
+
+
+.idea/
+target/
+*.iml
+>>>>>>> modulo-ventas

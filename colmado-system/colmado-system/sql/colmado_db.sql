@@ -1,4 +1,4 @@
--- colmado_db, debes ejecutar este script en su MySQL Workbench
+q-- colmado_db, debes ejecutar este script en su MySQL Workbench
 -- o desde la terminal para crear la base de datos en su computadora.
 
 CREATE DATABASE IF NOT EXISTS colmado_db;

@@ -52,6 +52,7 @@ public class MainFrame extends JFrame{
         panelContenido.add(vistaFactura, "factura");
         panelContenido.add(crearPlaceholder("👥", "Módulo de Clientes",   "Persona 4 — en desarrollo"), "clientes");
         panelContenido.add(crearPlaceholder("📊", "Módulo de Reportes",   "Persona 4 — en desarrollo"), "reportes");
+        panelContenido.add(crearPlaceholder("⚙️", "Módulo de Personalización", "Actualizacion - en desarrollo"), "personalización");
 
         add(panelContenido, BorderLayout.CENTER);
 
@@ -112,6 +113,8 @@ public class MainFrame extends JFrame{
             menu.add(crearBotonMenu("👥  Clientes",  "clientes"));
             menu.add(Box.createVerticalStrut(5));
             menu.add(crearBotonMenu("📊  Reportes",  "reportes"));
+            menu.add(Box.createVerticalStrut(5));
+            menu.add(crearBotonMenu("⚙️  Personalización", "personalización"));
         }
 
         // Espaciador para empujar cerrar sesión al fondo

@@ -52,9 +52,9 @@ public class VentaService {
 
     //Confirmar venta
 
-    public boolean confirmarVenta(int id_cliente){
+    public Venta confirmarVenta(int id_cliente){
         if (carrito.isEmpty()){
-            return false;
+            return null;
         }
 
         Venta venta = new Venta(id_cliente);
@@ -68,8 +68,9 @@ public class VentaService {
             // Aqui aplicaremos un procedimiento para conectar con los productos que entregara Anderson
             // y de ahi manipulamos el stock
             limpiarCarrito();
+            return venta;
         }
-        return guardado;
+        return null;
 
     }
 

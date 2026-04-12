@@ -46,4 +46,10 @@ src/main/resources/config.properties
 config.properties
 
 ### workpace ###
-.idea/workspace.xmlc
+
+workspace.xml
+.idea/workspace.xml
+
+target/
+*.iml
+

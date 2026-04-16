@@ -2,25 +2,25 @@ package com.colmado.dao;
 
 import com.colmado.modelo.Cliente;
 import com.colmado.util.ConexionDB;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteDAO {
 
+    private Connection getCon() {
+        return ConexionDB.getInstancia().getConexion();
+    }
+
     // ── Insertar ──────────────────────────────────────────────────────────────
     public boolean insertar(Cliente c) {
         String sql = "INSERT INTO clientes (nombre, telefono, email, direccion) VALUES (?, ?, ?, ?)";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, c.getNombre());
             ps.setString(2, c.getTelefono());
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getDireccion());
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -29,17 +29,14 @@ public class ClienteDAO {
 
     // ── Actualizar ────────────────────────────────────────────────────────────
     public boolean actualizar(Cliente c) {
-        String sql = "UPDATE clientes SET nombre=?, telefono=?, email=?, direccion=? WHERE id=?";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        String sql = "UPDATE clientes SET nombre=?, telefono=?, email=?, direccion=? WHERE id_cliente=?";
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, c.getNombre());
             ps.setString(2, c.getTelefono());
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getDireccion());
-            ps.setInt(5, c.getId());
+            ps.setInt(5, c.getId()); // Aquí c.getId() debe ser el id_cliente
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -48,13 +45,10 @@ public class ClienteDAO {
 
     // ── Eliminar ──────────────────────────────────────────────────────────────
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM clientes WHERE id=?";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        String sql = "DELETE FROM clientes WHERE id_cliente=?";
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -65,14 +59,11 @@ public class ClienteDAO {
     public List<Cliente> listarTodos() {
         List<Cliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM clientes ORDER BY nombre";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             Statement st = con.createStatement();
+        try (Statement st = getCon().createStatement();
              ResultSet rs = st.executeQuery(sql)) {
-
             while (rs.next()) {
                 lista.add(mapear(rs));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,15 +74,13 @@ public class ClienteDAO {
     public List<Cliente> buscarPorNombre(String texto) {
         List<Cliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM clientes WHERE nombre LIKE ? ORDER BY nombre";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, "%" + texto + "%");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(mapear(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,14 +89,12 @@ public class ClienteDAO {
 
     // ── Buscar por ID ─────────────────────────────────────────────────────────
     public Cliente buscarPorId(int id) {
-        String sql = "SELECT * FROM clientes WHERE id=?";
-        try (Connection con = ConexionDB.getInstancia().getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        String sql = "SELECT * FROM clientes WHERE id_cliente=?";
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapear(rs);
-
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return mapear(rs);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -117,7 +104,7 @@ public class ClienteDAO {
     // ── Mapear ResultSet → Cliente ────────────────────────────────────────────
     private Cliente mapear(ResultSet rs) throws SQLException {
         return new Cliente(
-                rs.getInt("id"),
+                rs.getInt("id_cliente"), // Nombre real de tu columna en DB
                 rs.getString("nombre"),
                 rs.getString("telefono"),
                 rs.getString("email"),

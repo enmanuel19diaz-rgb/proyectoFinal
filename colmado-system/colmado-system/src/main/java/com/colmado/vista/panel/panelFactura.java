@@ -21,6 +21,8 @@ public class panelFactura extends JPanel {
     private final Color fondo = new Color(240, 242,245);
 
 
+    private JLabel lblNegocio;
+    private JLabel lblDireccion;
     private JLabel lblNumFactura;
     private JLabel lblFecha;
     private JLabel lblCliente;
@@ -83,12 +85,14 @@ public class panelFactura extends JPanel {
         encabezado.setBackground(azulOscuro);
         encabezado.setBorder(new EmptyBorder(20, 24, 20, 24));
 
-        JLabel lblNegocio = new JLabel("COLMADO EL BUEN PRECIO");
+        // --- 2. EL CAMBIO PRINCIPAL ESTÁ AQUÍ ---
+        // Ya no declaramos "JLabel lblNegocio =", solo usamos la variable global
+        lblNegocio = new JLabel("Cargando datos del negocio...");
         lblNegocio.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblNegocio.setForeground(Blanco);
         lblNegocio.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel lblDireccion = new JLabel("Santo Domingo, RD | Tel: 809-000-0000");
+        lblDireccion = new JLabel("Cargando dirección...");
         lblDireccion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblDireccion.setForeground(grisClaro);
         lblDireccion.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -96,7 +100,7 @@ public class panelFactura extends JPanel {
         encabezado.add(lblNegocio);
         encabezado.add(Box.createVerticalStrut(4));
         encabezado.add(lblDireccion);
-
+        // ----------------------------------------
 
         JPanel infoPanel = new JPanel(new GridLayout(1,3,16,0));
         infoPanel.setOpaque(false);
@@ -127,7 +131,6 @@ public class panelFactura extends JPanel {
 
         String[] columnas = {"Producto", "Cantidad", "Precio Unit", "Subtotal"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
-
             @Override
             public boolean isCellEditable(int row, int col) {
                 return false;
@@ -147,8 +150,7 @@ public class panelFactura extends JPanel {
         tablaItems.setEnabled(false);
         tablaItems.setRowHeight(28);
         tablaItems.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tablaItems.getTableHeader().setBackground(azulMedio);
-        tablaItems.getTableHeader().setBackground(Blanco);
+        tablaItems.getTableHeader().setBackground(Blanco); // Corregido: tenías dos setBackground seguidos
 
         JScrollPane scroll = new JScrollPane(tablaItems);
         scroll.setBorder(BorderFactory.createLineBorder(grisClaro, 1));
@@ -174,8 +176,8 @@ public class panelFactura extends JPanel {
         btnImprimir.setBorderPainted(false);
         btnImprimir.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnImprimir.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, "Función de impresión próximamente.\", \"Imprimir\"," +
-                        " JOptionPane.INFORMATION_MESSAGE"));
+                JOptionPane.showMessageDialog(this, "Función de impresión próximamente.", "Imprimir",
+                        JOptionPane.INFORMATION_MESSAGE)); // Corregido: las comillas estaban mal cerradas
 
         JButton btnNuevaVenta = new JButton("\uD83D\uDCB0  Nueva Venta");
         btnNuevaVenta.setFont(new Font("Segoe UI", Font.PLAIN, 13));

@@ -37,3 +37,17 @@ CREATE TABLE detalle_venta ( id_detalle INT PRIMARY KEY AUTO_INCREMENT,
 
 -- Usuario de prueba: admin / 1234
 INSERT INTO usuarios (username, password, rol) VALUES ('admin', '1234', 'ADMIN');
+
+-- Esta sera la configuracion del negocio
+
+CREATE TABLE configuracion (
+                               id INT PRIMARY KEY DEFAULT 1,
+                               nombre_negocio VARCHAR(100) NOT NULL,
+                               rnc VARCHAR(20),
+                               direccion VARCHAR(200),
+                               telefono VARCHAR(15)
+);
+
+-- Insertamos los datos por defecto la primera vez
+INSERT INTO configuracion (id, nombre_negocio, rnc, direccion, telefono)
+VALUES (1, 'Colmado la Venganza', '123-4567890-1', 'La caleta, AV panamericana', '809-123-4567');

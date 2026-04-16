@@ -1,229 +1,186 @@
 package com.colmado.vista.panel;
 
-import com.colmado.modelo.Venta;
-import com.colmado.modelo.DetalleVenta;
-import com.colmado.modelo.Usuario;
-import com.colmado.service.VentaService;
-
+import com.colmado.modelo.*;
+import com.colmado.service.*;
+import com.colmado.dao.ProductoDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class panelVentas extends JPanel {
+    private final VentaService ventaService;
+    private final InventarioService inventarioService;
+    private final ProductoDAO productoDAO;
+    private Producto productoSeleccionado;
 
-    private VentaService ventaService;
-    private Usuario usuario;
-    private panelFactura panelFactura;
-    private CardLayout cardLayout;
-    private JPanel panelContenido;
-
-    // Componentes
-    private JTextField txtIdProducto;
-    private JTextField txtCantidad;
-    private JTextField txtPrecio;
-    private JButton btnAgregar;
-    private JButton btnEliminar;
-    private JButton btnCobrar;
+    private JTextField txtBuscador, txtCantidad, txtPagoCon;
+    private JPopupMenu menuSugerencias;
+    private JList<Producto> listaSugerencias;
+    private DefaultListModel<Producto> modeloLista;
+    private JLabel lblPrecioInfo, lblTotal, lblCambioRealTime;
     private JTable tablaCarrito;
     private DefaultTableModel modeloTabla;
-    private JLabel lblTotal;
 
-    // Combinacion de colores para interface
-    private final Color azulOscuro = new Color(13,27, 42);
-    private final Color azulMedio = new Color(27,38,59);
-    private final Color azulAcento = new Color(65,105,225);
+    private final Color azulOscuro = new Color(13, 27, 42);
+    private final Color azulAcento = new Color(65, 105, 225);
     private final Color Blanco = Color.WHITE;
-    private final Color grisClaro = new Color(200,210,220);
-    private final Color Fondo = new Color(240,242,245);
 
-    public panelVentas(Usuario usuario, panelFactura panelFactura, CardLayout cardLayout, JPanel panelContenido){
-        this.usuario = usuario;
-        this.panelFactura = panelFactura;
-        this.cardLayout = cardLayout;
-        this.panelContenido = panelContenido;
+    public panelVentas(Usuario u, panelFactura pf, CardLayout cl, JPanel pc) {
         this.ventaService = new VentaService();
-        initComponents();
+        this.inventarioService = new InventarioService();
+        this.productoDAO = new ProductoDAO();
+        initComponents(pf, cl, pc);
     }
 
-    private void initComponents(){
+    private void initComponents(panelFactura pf, CardLayout cl, JPanel pc) {
         setLayout(new BorderLayout(10, 10));
-        setBackground(Fondo);
-        setBorder(BorderFactory.createEmptyBorder(16,20,16,20));
+        setBackground(new Color(240, 242, 245));
 
+        // --- BUSCADOR ---
+        txtBuscador = new JTextField(20);
+        modeloLista = new DefaultListModel<>();
+        listaSugerencias = new JList<>(modeloLista);
+        menuSugerencias = new JPopupMenu();
+        JScrollPane scrollSugerencias = new JScrollPane(listaSugerencias);
+        scrollSugerencias.setPreferredSize(new Dimension(250, 150));
+        menuSugerencias.add(scrollSugerencias);
+        menuSugerencias.setFocusable(false);
 
-        JPanel panelTitulo = new JPanel(new BorderLayout());
-        panelTitulo.setOpaque(false);
-
-        JLabel lblTitulo = new JLabel("\uD83D\uDCB0  Nueva Venta");
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD,20));
-        lblTitulo.setForeground(azulOscuro);
-        panelTitulo.add(lblTitulo, BorderLayout.WEST);
-        add(panelTitulo, BorderLayout.NORTH);
-
-        JPanel panelEntrada = new JPanel();
-        panelEntrada.setLayout(new BoxLayout(panelEntrada, BoxLayout.X_AXIS));
+        JPanel panelEntrada = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         panelEntrada.setBackground(Blanco);
-        panelEntrada.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(grisClaro, 1), (BorderFactory.createEmptyBorder(10, 14, 10, 14))
-        ));
-
-        panelEntrada.add(new JLabel("ID Producto: "));
-        txtIdProducto = new JTextField(8);
-        estilizarCampo(txtIdProducto);
-        panelEntrada.add(txtIdProducto);
-
-        panelEntrada.add(Box.createHorizontalStrut(10));
-        panelEntrada.add(new JLabel("Cantidad: "));
+        lblPrecioInfo = new JLabel("Precio: RD$ 0.00");
         txtCantidad = new JTextField(5);
-        estilizarCampo(txtCantidad);
-        panelEntrada.add(txtCantidad);
+        JButton btnAgregar = new JButton("Agregar");
+        btnAgregar.setBackground(azulAcento); btnAgregar.setForeground(Blanco);
 
-        panelEntrada.add(Box.createHorizontalStrut(10));
-        panelEntrada.add(new JLabel("Precio Unit: "));
-        txtPrecio = new JTextField(7);
-        estilizarCampo(txtPrecio);
-        panelEntrada.add(txtPrecio);
+        panelEntrada.add(new JLabel("🔍 Producto:")); panelEntrada.add(txtBuscador);
+        panelEntrada.add(new JLabel("Cant:")); panelEntrada.add(txtCantidad);
+        panelEntrada.add(lblPrecioInfo); panelEntrada.add(btnAgregar);
 
-        panelEntrada.add(Box.createHorizontalStrut(14));
-        btnAgregar = crearBoton("Agregar", azulAcento);
-        panelEntrada.add(btnAgregar);
-
-        //Panel Central
-        String[] columns = {"ID Producto", "Cantidad", "Precio Unit", "Subtotal"};
-        modeloTabla = new DefaultTableModel(columns, 0){
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
-        };
-
+        // --- TABLA ---
+        modeloTabla = new DefaultTableModel(new String[]{"ID", "Descripción", "Cantidad", "Precio", "Subtotal"}, 0);
         tablaCarrito = new JTable(modeloTabla);
-        tablaCarrito.setRowHeight(28);
-        tablaCarrito.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tablaCarrito.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tablaCarrito.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        tablaCarrito.getTableHeader().setBackground(azulMedio);
-        tablaCarrito.getTableHeader().setForeground(Blanco);
+        add(panelEntrada, BorderLayout.NORTH);
+        add(new JScrollPane(tablaCarrito), BorderLayout.CENTER);
 
-        JScrollPane scroll = new JScrollPane(tablaCarrito);
-        scroll.setBorder(BorderFactory.createLineBorder(grisClaro,1 ));
+        // --- PIE DE COBRO ---
+        JPanel panelInferior = new JPanel(new BorderLayout());
+        panelInferior.setBackground(azulOscuro);
+        panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JPanel panelCentro = new JPanel(new BorderLayout(0, 10));
-       panelCentro.setOpaque(false);
-       panelCentro.add(panelEntrada, BorderLayout.NORTH);
-       panelCentro.add(scroll, BorderLayout.CENTER);
-       add(panelCentro, BorderLayout.CENTER);
+        lblTotal = new JLabel("Total: RD$ 0.00");
+        lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTotal.setForeground(Blanco);
 
-       JPanel panelInferior = new JPanel(new BorderLayout());
-       panelInferior.setBackground(azulOscuro);
-       panelInferior.setBorder(BorderFactory.createEmptyBorder(12,16,12,16));
+        lblCambioRealTime = new JLabel("Cambio: RD$ 0.00");
+        lblCambioRealTime.setForeground(new Color(255, 215, 0));
 
-       lblTotal = new JLabel("Total: $0.00");
-       lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 18));
-       lblTotal.setForeground(Blanco);
-       panelInferior.add(lblTotal, BorderLayout.WEST);
+        JPanel pLabels = new JPanel(new GridLayout(2, 1));
+        pLabels.setOpaque(false);
+        pLabels.add(lblTotal); pLabels.add(lblCambioRealTime);
 
-       JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-       panelBotones.setOpaque(false);
-       btnEliminar = crearBoton("Eliminar", new Color(180, 40,40));
-       btnCobrar = crearBoton("Cobrar", new Color(34,139,34));
-       panelBotones.add(btnEliminar);
-       panelBotones.add(btnCobrar);
-       panelInferior.add(panelBotones, BorderLayout.EAST);
-       add(panelInferior, BorderLayout.SOUTH);
+        txtPagoCon = new JTextField(8);
+        JButton btnCobrar = new JButton("Cobrar y Facturar");
+        btnCobrar.setBackground(new Color(34, 139, 34)); btnCobrar.setForeground(Blanco);
 
-       btnAgregar.addActionListener(e -> {
-           try{
-               int idProducto = Integer.parseInt(txtIdProducto.getText().trim());
-               int cantidad = Integer.parseInt(txtCantidad.getText().trim());
-               double precio = Double.parseDouble(txtPrecio.getText().trim());
+        JPanel pAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5));
+        pAcciones.setOpaque(false);
+        pAcciones.add(new JLabel("<html><font color='white'>Paga con RD$:</font></html>"));
+        pAcciones.add(txtPagoCon);
+        pAcciones.add(btnCobrar);
 
-               if (cantidad <= 0 || precio <= 0) {
-                   JOptionPane.showMessageDialog(this,
-                           "Cantidad y precio deben ser mayores a 0.", "Error", JOptionPane.ERROR_MESSAGE );
-                   return;
-               }
+        panelInferior.add(pLabels, BorderLayout.WEST);
+        panelInferior.add(pAcciones, BorderLayout.EAST);
+        add(panelInferior, BorderLayout.SOUTH);
 
-               ventaService.agregarProducto(idProducto, cantidad, precio);
-               refrescarTabla();
-               actualizarTotal();
-               txtIdProducto.setText("");
-               txtCantidad.setText("");
-               txtPrecio.setText("");
-               txtIdProducto.requestFocus();
+        // --- EVENTOS ---
+        txtBuscador.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                String t = txtBuscador.getText().trim();
+                if (t.length() >= 2) {
+                    modeloLista.clear();
+                    List<Producto> sug = productoDAO.obtenerTodos().stream()
+                            .filter(p -> p.getNombre().toLowerCase().contains(t.toLowerCase()))
+                            .collect(Collectors.toList());
+                    sug.forEach(modeloLista::addElement);
+                    if (!sug.isEmpty()) menuSugerencias.show(txtBuscador, 0, txtBuscador.getHeight());
+                }
+            }
+        });
 
-           } catch(NumberFormatException ex){
-               JOptionPane.showMessageDialog(this,
-                       "Ingresa valores numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-           }
-       });
+        listaSugerencias.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                productoSeleccionado = listaSugerencias.getSelectedValue();
+                if (productoSeleccionado != null) {
+                    txtBuscador.setText(productoSeleccionado.getNombre());
+                    lblPrecioInfo.setText("Precio: RD$ " + productoSeleccionado.getPrecio());
+                    menuSugerencias.setVisible(false);
+                    txtCantidad.requestFocus();
+                }
+            }
+        });
 
-       btnEliminar.addActionListener(e -> {
-           int fila = tablaCarrito.getSelectedRow();
-           if(fila >= 0) {
-               ventaService.eliminarProducto(fila);
-               refrescarTabla();
-               actualizarTotal();
-           } else {
-               JOptionPane.showMessageDialog(this,
-                       "Selecciona un producto para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-           }
-       });
+        btnAgregar.addActionListener(e -> {
+            if (productoSeleccionado == null) return;
+            try {
+                int c = Integer.parseInt(txtCantidad.getText().trim());
+                if (inventarioService.hayStock(productoSeleccionado.getId_producto(), c)) {
+                    ventaService.agregarProducto(productoSeleccionado.getId_producto(), c, productoSeleccionado.getPrecio());
+                    actualizarCarrito();
+                    limpiarEntrada();
+                } else { JOptionPane.showMessageDialog(null, "No hay stock."); }
+            } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Cantidad inválida."); }
+        });
 
-       btnCobrar.addActionListener(e -> {
-           if (ventaService.getCarrito().isEmpty()) {
-               JOptionPane.showMessageDialog(this,
-                       "El carrito está vacío.", "Aviso", JOptionPane.WARNING_MESSAGE);
-               return;
-           }
+        txtPagoCon.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                try {
+                    double pago = txtPagoCon.getText().isEmpty() ? 0 : Double.parseDouble(txtPagoCon.getText());
+                    lblCambioRealTime.setText(String.format("Cambio: RD$ %.2f", (pago - ventaService.getTotal())));
+                } catch (Exception ex) { }
+            }
+        });
 
-           int idCliente = 1;
-           Venta ventaConfirmada = ventaService.confirmarVenta(idCliente);
+        btnCobrar.addActionListener(e -> {
+            try {
+                double pago = Double.parseDouble(txtPagoCon.getText().trim());
+                double total = ventaService.getTotal();
 
-           if (ventaConfirmada != null) {
-               panelFactura.cargarVenta(ventaConfirmada);
-               cardLayout.show(panelContenido, "factura");
-               refrescarTabla();
-               actualizarTotal();
-           } else {
-               JOptionPane.showMessageDialog(this,
-                       "Error al registrar la venta.", "Error", JOptionPane.ERROR_MESSAGE);
-           }
-       });
+                if (pago < total) {
+                    JOptionPane.showMessageDialog(null, "Dinero insuficiente. Faltan RD$ " + (total - pago));
+                    return;
+                }
+
+                Venta v = ventaService.confirmarVenta(1);
+                if (v != null) {
+                    pf.cargarVentaConCambio(v, pago, (pago - total));
+                    cl.show(pc, "factura");
+                    vaciarTodo();
+                }
+            } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Monto de pago inválido."); }
+        });
     }
 
-    private void refrescarTabla() {
+    private void actualizarCarrito() {
         modeloTabla.setRowCount(0);
-        for(DetalleVenta d: ventaService.getCarrito()) {
-            modeloTabla.addRow(new Object[]{
-                    d.getId_producto(),
-                    d.getCantidad(),
-                    String.format("$%.2f", d.getPrecioUnit()),
-                    String.format("$%.2f", d.getSubtotal())
-            });
-        }
+        ventaService.getCarrito().forEach(d -> {
+            Producto p = productoDAO.obtenerPorId(d.getId_producto());
+            modeloTabla.addRow(new Object[]{d.getId_producto(), p.getNombre(), d.getCantidad(), d.getPrecioUnit(), d.getSubtotal()});
+        });
+        lblTotal.setText(String.format("Total: RD$ %.2f", ventaService.getTotal()));
     }
 
-    private void actualizarTotal() {
-        lblTotal.setText(String.format("Total: $%.2f", ventaService.getTotal()));
+    private void limpiarEntrada() {
+        txtBuscador.setText(""); txtCantidad.setText("");
+        lblPrecioInfo.setText("Precio: RD$ 0.00"); productoSeleccionado = null;
+        txtBuscador.requestFocus();
     }
 
-    private void estilizarCampo(JTextField campo) {
-        campo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(grisClaro, 1),
-                BorderFactory.createEmptyBorder(4,8,4,8)
-        ));
-    }
-
-    private JButton crearBoton(String texto, Color color){
-        JButton btn = new JButton(texto);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setBackground(color);
-        btn.setForeground(Blanco);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return btn;
+    private void vaciarTodo() {
+        limpiarEntrada(); txtPagoCon.setText("");
+        actualizarCarrito(); lblCambioRealTime.setText("Cambio: RD$ 0.00");
     }
 }

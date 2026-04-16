@@ -1,216 +1,195 @@
 package com.colmado.vista.panel;
 
-import com.colmado.modelo.Venta;
-import com.colmado.modelo.DetalleVenta;
-
+import com.colmado.modelo.*;
+import com.colmado.dao.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
+import java.awt.print.*;
 
 public class panelFactura extends JPanel {
 
-    private Venta venta;
+    // Labels del Negocio
+    private JLabel lblNegocio, lblRnc, lblDir, lblTel;
 
+    // Labels de la Venta
+    private JLabel lblTotal, lblPago, lblCambio, lblFactura, lblFecha;
+
+    private JTable tabla;
+    private DefaultTableModel modelo;
+    private JButton btnPrint;
+
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final ConfiguracionDAO configDAO = new ConfiguracionDAO();
+
+    // Colores corporativos
     private final Color azulOscuro = new Color(13, 27, 42);
-    private final Color azulMedio = new Color(27,38,59);
-    private final Color azulAcento = new Color(65,105,225);
+    private final Color azulAcento = new Color(65, 105, 225);
     private final Color Blanco = Color.WHITE;
-    private final Color grisClaro = new Color(200, 210, 220);
-    private final Color fondo = new Color(240, 242,245);
 
+    public panelFactura() {
+        setLayout(new BorderLayout(0, 15));
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
-    private JLabel lblNegocio;
-    private JLabel lblDireccion;
-    private JLabel lblNumFactura;
-    private JLabel lblFecha;
-    private JLabel lblCliente;
-    private JLabel lblTotal;
-    private JTable tablaItems;
-    private DefaultTableModel modeloTabla;
+        // --- ENCABEZADO ---
+        JPanel pnlHeader = new JPanel(new GridLayout(4, 1));
+        pnlHeader.setBackground(azulOscuro);
+        pnlHeader.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-    public panelFactura(){
-        setLayout(new BorderLayout());
-        setBackground(fondo);
-        mostrarVacio();
+        lblNegocio = crearLblCentral("", 24, Font.BOLD);
+        lblDir = crearLblCentral("", 14, Font.PLAIN);
+        lblRnc = crearLblCentral("", 14, Font.PLAIN);
+        lblTel = crearLblCentral("", 14, Font.PLAIN);
+
+        pnlHeader.add(lblNegocio);
+        pnlHeader.add(lblDir);
+        pnlHeader.add(lblRnc);
+        pnlHeader.add(lblTel);
+
+        // --- INFORMACIÓN DE VENTA ---
+        JPanel pnlInfoVenta = new JPanel(new BorderLayout());
+        pnlInfoVenta.setOpaque(false);
+        lblFactura = new JLabel("Factura #: ");
+        lblFactura.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        lblFecha = new JLabel("Fecha: ");
+        lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        pnlInfoVenta.add(lblFactura, BorderLayout.WEST);
+        pnlInfoVenta.add(lblFecha, BorderLayout.EAST);
+
+        JPanel norteContenedor = new JPanel(new BorderLayout(0, 15));
+        norteContenedor.setOpaque(false);
+        norteContenedor.add(pnlHeader, BorderLayout.NORTH);
+        norteContenedor.add(pnlInfoVenta, BorderLayout.SOUTH);
+        add(norteContenedor, BorderLayout.NORTH);
+
+        // --- TABLA DE PRODUCTOS ---
+        modelo = new DefaultTableModel(new String[]{"Producto", "Cant.", "Precio", "Subtotal"}, 0);
+        tabla = new JTable(modelo);
+        tabla.setRowHeight(28);
+        tabla.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tabla.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        tabla.getTableHeader().setBackground(new Color(230, 230, 230));
+
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        add(scroll, BorderLayout.CENTER);
+
+        // --- PIE DE PÁGINA: TOTALES Y BOTÓN ---
+        JPanel sur = new JPanel(new BorderLayout());
+        sur.setBackground(azulOscuro);
+        sur.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+        // Panel de montos
+        JPanel pnlTotales = new JPanel(new GridLayout(3, 1));
+        pnlTotales.setOpaque(false);
+
+        lblTotal = crearLblIzquierda("TOTAL: RD$ 0.00", 20, Font.BOLD);
+        lblPago = crearLblIzquierda("RECIBIDO: RD$ 0.00", 14, Font.PLAIN);
+        lblCambio = crearLblIzquierda("CAMBIO: RD$ 0.00", 16, Font.BOLD);
+        lblCambio.setForeground(new Color(255, 235, 59)); // Amarillo vibrante
+
+        pnlTotales.add(lblTotal);
+        pnlTotales.add(lblPago);
+        pnlTotales.add(lblCambio);
+
+        // BOTÓN IMPRIMIR MODERNO
+        btnPrint = new JButton("IMPRIMIR FACTURA");
+        btnPrint.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnPrint.setBackground(azulAcento);
+        btnPrint.setForeground(Blanco);
+        btnPrint.setFocusPainted(false);
+        btnPrint.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnPrint.setBorder(BorderFactory.createEmptyBorder(12, 25, 12, 25));
+
+        // Efecto Hover
+        btnPrint.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) { btnPrint.setBackground(new Color(30, 144, 255)); }
+            public void mouseExited(java.awt.event.MouseEvent e) { btnPrint.setBackground(azulAcento); }
+        });
+
+        btnPrint.addActionListener(e -> imprimir());
+
+        sur.add(pnlTotales, BorderLayout.WEST);
+        sur.add(btnPrint, BorderLayout.EAST);
+        add(sur, BorderLayout.SOUTH);
     }
 
-    public void cargarVenta(Venta venta){
-        this.venta = venta;
-        removeAll();
-        initComponents();
-        revalidate();
-        repaint();
-    }
-
-    private void mostrarVacio(){
-        setLayout(new GridBagLayout());
-        JPanel contenido = new JPanel();
-        contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
-        contenido.setOpaque(false);
-
-        JLabel icono = new JLabel("🧾", SwingConstants.CENTER);
-        icono.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 56));
-        icono.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel titulo = new JLabel("Sin Factura activa", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titulo.setForeground(new Color(60,60,60));
-        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel sub = new JLabel("Completa una venta para ver la factura aqui.", SwingConstants.CENTER);
-        sub.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        sub.setForeground(Color.GRAY);
-        sub.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        contenido.add(icono);
-        contenido.add(Box.createVerticalStrut(10));
-        contenido.add(titulo);
-        contenido.add(Box.createVerticalStrut(6));
-        contenido.add(sub);
-        add(contenido);
-    }
-
-    private void initComponents() {
-        setLayout(new BorderLayout(0,0));
-        setBackground(fondo);
-
-        JPanel contenedor = new JPanel(new BorderLayout(0, 16));
-        contenedor.setOpaque(false);
-        contenedor.setBorder(new EmptyBorder(20, 40, 20, 40));
-
-        JPanel encabezado = new JPanel();
-        encabezado.setLayout(new BoxLayout(encabezado, BoxLayout.Y_AXIS));
-        encabezado.setBackground(azulOscuro);
-        encabezado.setBorder(new EmptyBorder(20, 24, 20, 24));
-
-        // --- 2. EL CAMBIO PRINCIPAL ESTÁ AQUÍ ---
-        // Ya no declaramos "JLabel lblNegocio =", solo usamos la variable global
-        lblNegocio = new JLabel("Cargando datos del negocio...");
-        lblNegocio.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblNegocio.setForeground(Blanco);
-        lblNegocio.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        lblDireccion = new JLabel("Cargando dirección...");
-        lblDireccion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblDireccion.setForeground(grisClaro);
-        lblDireccion.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        encabezado.add(lblNegocio);
-        encabezado.add(Box.createVerticalStrut(4));
-        encabezado.add(lblDireccion);
-        // ----------------------------------------
-
-        JPanel infoPanel = new JPanel(new GridLayout(1,3,16,0));
-        infoPanel.setOpaque(false);
-
-        lblNumFactura = new JLabel();
-        lblFecha = new JLabel();
-        lblCliente = new JLabel();
-
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-        lblNumFactura.setText("Factura #: " + venta.getId_venta());
-        lblFecha.setText("Fecha: " + venta.getFecha().format(fmt));
-        lblCliente.setText(("Cliente ID: " + venta.getId_cliente()));
-
-        for (JLabel lbl: new JLabel[] {lblNumFactura, lblFecha, lblCliente}){
-            lbl.setFont((new Font("Segoe UI", Font.PLAIN, 13)));
-            lbl.setForeground(new Color(40, 40,40));
-            lbl.setBorder(new EmptyBorder(10, 14, 10, 14));
+    public void cargarVentaConCambio(Venta v, double pago, double cambio) {
+        // Cargar datos actuales del negocio
+        Configuracion config = configDAO.obtenerConfiguracion();
+        if (config != null) {
+            lblNegocio.setText(config.getNombre().toUpperCase());
+            lblRnc.setText("RNC: " + config.getRnc());
+            lblDir.setText(config.getDireccion());
+            lblTel.setText("TEL: " + config.getTelefono());
         }
 
-        JPanel cardNum = crearCardInfo(lblNumFactura);
-        JPanel cardFecha = crearCardInfo(lblFecha);
-        JPanel cardCliente = crearCardInfo(lblCliente);
+        lblFactura.setText("Factura #: " + v.getId_venta());
+        lblFecha.setText("Fecha: " + v.getFecha());
+        lblTotal.setText("TOTAL: RD$ " + String.format("%.2f", v.getTotal()));
+        lblPago.setText("RECIBIDO: RD$ " + String.format("%.2f", pago));
+        lblCambio.setText("CAMBIO: RD$ " + String.format("%.2f", cambio));
 
-        infoPanel.add(cardNum);
-        infoPanel.add(cardFecha);
-        infoPanel.add(cardCliente);
+        modelo.setRowCount(0);
+        v.getDetalle().forEach(d -> {
+            Producto p = productoDAO.obtenerPorId(d.getId_producto());
+            String nombre = (p != null) ? p.getNombre() : "Producto ID: " + d.getId_producto();
+            modelo.addRow(new Object[]{nombre, d.getCantidad(), d.getPrecioUnit(), d.getSubtotal()});
+        });
+    }
 
-        String[] columnas = {"Producto", "Cantidad", "Precio Unit", "Subtotal"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
+    private void imprimir() {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setJobName("Factura_" + lblFactura.getText());
+
+        job.setPrintable((Graphics g, PageFormat pf, int pi) -> {
+            if (pi > 0) return Printable.NO_SUCH_PAGE;
+
+            Graphics2D g2d = (Graphics2D) g;
+
+            // --- CONFIGURACIÓN DE ALTA CALIDAD ---
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+            g2d.translate(pf.getImageableX(), pf.getImageableY());
+
+            // Escalar para que se vea nítido en el papel (ajustado al ancho)
+            double scale = pf.getImageableWidth() / this.getWidth();
+            g2d.scale(scale, scale);
+
+            // Ocultar botón antes de imprimir para que la factura salga limpia
+            btnPrint.setVisible(false);
+            this.printAll(g2d);
+            btnPrint.setVisible(true);
+
+            return Printable.PAGE_EXISTS;
+        });
+
+        if (job.printDialog()) {
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
             }
-        };
-
-        for (DetalleVenta d: venta.getDetalle()){
-            modeloTabla.addRow(new Object[]{
-                    "Producto #" + d.getId_producto(),
-                    d.getCantidad(),
-                    String.format("$%.2f", d.getPrecioUnit()),
-                    String.format("$%.2f", d.getSubtotal())
-            });
         }
-
-        tablaItems = new JTable(modeloTabla);
-        tablaItems.setEnabled(false);
-        tablaItems.setRowHeight(28);
-        tablaItems.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tablaItems.getTableHeader().setBackground(Blanco); // Corregido: tenías dos setBackground seguidos
-
-        JScrollPane scroll = new JScrollPane(tablaItems);
-        scroll.setBorder(BorderFactory.createLineBorder(grisClaro, 1));
-
-        JPanel panelTotal = new JPanel(new BorderLayout());
-        panelTotal.setBackground(azulOscuro);
-        panelTotal.setBorder(new EmptyBorder(12, 20, 12, 20));
-
-        lblTotal = new JLabel(String.format("TOTAL:   $%.2f", venta.getTotal()));
-        lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblTotal.setForeground(Blanco);
-        lblTotal.setHorizontalAlignment(SwingConstants.RIGHT);
-        panelTotal.add(lblTotal, BorderLayout.EAST);
-
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT,10, 0));
-        panelBotones.setOpaque(false);
-
-        JButton btnImprimir = new JButton("\uD83D\uDDA8 Imprimir");
-        btnImprimir.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnImprimir.setBackground(azulAcento);
-        btnImprimir.setForeground(Blanco);
-        btnImprimir.setFocusPainted(false);
-        btnImprimir.setBorderPainted(false);
-        btnImprimir.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnImprimir.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, "Función de impresión próximamente.", "Imprimir",
-                        JOptionPane.INFORMATION_MESSAGE)); // Corregido: las comillas estaban mal cerradas
-
-        JButton btnNuevaVenta = new JButton("\uD83D\uDCB0  Nueva Venta");
-        btnNuevaVenta.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btnNuevaVenta.setBackground(azulMedio);
-        btnNuevaVenta.setForeground(Blanco);
-        btnNuevaVenta.setFocusPainted(false);
-        btnNuevaVenta.setBorderPainted(false);
-        btnNuevaVenta.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        panelBotones.add(btnNuevaVenta);
-        panelBotones.add(btnImprimir);
-
-        //Ensamblar
-        JPanel cuerpo = new JPanel(new BorderLayout(0, 12));
-        cuerpo.setOpaque(false);
-        cuerpo.add(infoPanel, BorderLayout.NORTH);
-        cuerpo.add(scroll, BorderLayout.CENTER);
-        cuerpo.add(panelTotal, BorderLayout.SOUTH);
-
-        contenedor.add(encabezado, BorderLayout.NORTH);
-        contenedor.add(cuerpo, BorderLayout.CENTER);
-        contenedor.add(panelBotones, BorderLayout.SOUTH);
-
-        add(contenedor, BorderLayout.CENTER);
     }
 
-    private JPanel crearCardInfo(JLabel label) {
-        JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(Blanco);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(grisClaro, 1),
-                new EmptyBorder(4, 8, 4, 8)));
-        card.add(label, BorderLayout.CENTER);
-        return card;
+    // Métodos auxiliares para Labels
+    private JLabel crearLblCentral(String t, int tam, int estilo) {
+        JLabel l = new JLabel(t, SwingConstants.CENTER);
+        l.setFont(new Font("Segoe UI", estilo, tam));
+        l.setForeground(Blanco);
+        return l;
+    }
+
+    private JLabel crearLblIzquierda(String t, int tam, int estilo) {
+        JLabel l = new JLabel(t);
+        l.setFont(new Font("Segoe UI", estilo, tam));
+        l.setForeground(Blanco);
+        return l;
     }
 }

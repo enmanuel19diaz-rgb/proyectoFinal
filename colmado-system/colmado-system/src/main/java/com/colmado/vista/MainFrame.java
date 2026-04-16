@@ -5,6 +5,9 @@ import com.colmado.modelo.Usuario;
 import com.colmado.vista.panel.*;
 import com.colmado.modelo.Configuracion;
 import com.colmado.dao.ConfiguracionDAO;
+import com.colmado.vista.panel.panelProductos;
+import com.colmado.vista.panel.PanelInventario;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,8 +46,8 @@ public class MainFrame extends JFrame{
         panelContenido.setBackground(new Color(240, 242, 245));
 
         // Placeholders — se reemplazan cuando los compañeros entreguen sus paneles
-        panelContenido.add(crearPlaceholder("📦", "Módulo de Productos",  "Persona 2 — en desarrollo"), "productos");
-        panelContenido.add(crearPlaceholder("🏪", "Módulo de Inventario", "Persona 2 — en desarrollo"), "inventario");
+        panelContenido.add(new panelProductos(usuarioActual), "productos");
+        panelContenido.add(new PanelInventario(usuarioActual), "inventario");
         panelFactura vistaFactura = new panelFactura();
         panelVentas vistaVentas = new panelVentas(usuarioActual, vistaFactura, cardLayout, panelContenido);
         panelContenido.add(vistaVentas, "ventas");
